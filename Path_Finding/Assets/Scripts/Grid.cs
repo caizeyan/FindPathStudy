@@ -20,7 +20,18 @@ public class Grid : MonoBehaviour
     public Image image;
     public TextMeshProUGUI num;
     public Button btn;
+    public Image visitedImg;
 
+    public Grid PreGrid
+    {
+        get;
+        set;
+    }
+    public Vector2Int Pos
+    {
+        get;
+        set;
+    }
     public GridType type = GridType.None;
     public void ChangeType(GridType gridType)
     {
@@ -41,15 +52,22 @@ public class Grid : MonoBehaviour
                 break;
         }
     }
+    
 
     public void BindClick(UnityAction clickFunc)
     {
         btn.onClick.AddListener(clickFunc);
     }
 
-    public void SetVisited()
+    public void SetVisited(bool value)
     {
-        image.color = Color.yellow;
+        visitedImg.gameObject.SetActive(value);
+    }
+
+    public void ClearState()
+    {
+        visitedImg.gameObject.SetActive(false);
+        PreGrid = null;
     }
     
 }

@@ -47,6 +47,7 @@ public class BFS : MonoBehaviour
             {
                 map[i,j].gameObject.SetActive(true); 
                 map[i,j].ChangeType(GridType.Normal);
+                map[i, j].Pos = new Vector2Int(j, i);
             }
         }
         map[startPos.y,startPos.x].ChangeType(GridType.Start);
@@ -85,26 +86,50 @@ public class BFS : MonoBehaviour
     private int[,] dir = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
     private void PathFind()
     {
-        Queue<Vector2Int> queue = new Queue<Vector2Int>(); 
-        bool[, ] visited = new bool[height,width];
-        queue.Enqueue(startPos);
-        visited[startPos.y, startPos.x] = true;
+        ClearState();
+        Queue<Grid> queue = new Queue<Grid>();
+        HashSet<Grid> visited = new HashSet<Grid>();
+        queue.Enqueue(map[startPos.y,startPos.x]);
+        visited.Add(map[startPos.y, startPos.x]);
+        //查找路径
         while (queue.Count != 0)
         {
-            Vector2Int pos = queue.Dequeue();
+            Grid preGrid = queue.Dequeue();
             for (int i = 0; i < 4; i++)
             {
+                var pos = preGrid.Pos;
                 int x = pos.x + dir[i,0];
                 int y = pos.y + dir[i,1];
                 if (x>=0 && x<width && y>=0 && y<height)
-                { 
-                    if (map[y,x].type != GridType.Block && !visited[y,x]) {
-                            map[y,x].SetVisited();
-                            queue.Enqueue(new Vector2Int(x,y));
-                            visited[y, x] = true; 
+                {
+                    var grid = map[y, x];
+                    if (grid.type != GridType.Block && !visited.Contains(grid) ) {
+                        queue.Enqueue(grid);
+                        visited.Add(grid);
+                        //设置来路 用于路径查找
+                        grid.PreGrid = preGrid;
                     }
                 }
-                
+            }
+        }
+
+        //从后往前寻找路径
+        var lastGrid = map[endPos.y, endPos.x];
+        while (lastGrid.PreGrid)
+        {
+            lastGrid.SetVisited(true);
+            lastGrid = lastGrid.PreGrid;
+        }
+
+    }
+    
+    private void ClearState()
+    {
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                map[i,j].ClearState();
             }
         }
     }
