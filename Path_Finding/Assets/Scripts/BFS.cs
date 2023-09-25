@@ -91,9 +91,12 @@ public class BFS : MonoBehaviour
         HashSet<Grid> visited = new HashSet<Grid>();
         queue.Enqueue(map[startPos.y,startPos.x]);
         visited.Add(map[startPos.y, startPos.x]);
+        var lastGrid = map[endPos.y, endPos.x];
         //查找路径
         while (queue.Count != 0)
         {
+            //是否查找到终点
+            bool findLast = false;
             Grid preGrid = queue.Dequeue();
             for (int i = 0; i < 4; i++)
             {
@@ -108,13 +111,24 @@ public class BFS : MonoBehaviour
                         visited.Add(grid);
                         //设置来路 用于路径查找
                         grid.PreGrid = preGrid;
+                        grid.SetVisited(true);
+                        //提前退出
+                        if (grid == lastGrid)
+                        {
+                            findLast = true;
+                            break;
+                        }
                     }
                 }
+            }
+
+            if (findLast)
+            {
+                break;
             }
         }
 
         //从后往前寻找路径
-        var lastGrid = map[endPos.y, endPos.x];
         while (lastGrid.PreGrid)
         {
             lastGrid.SetVisited(true);
