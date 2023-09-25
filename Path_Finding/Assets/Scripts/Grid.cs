@@ -24,7 +24,6 @@ public class Grid : MonoBehaviour
     public GridType type = GridType.None;
     public void ChangeType(GridType gridType)
     {
-        if (this.type == gridType) return;
         this.type = gridType;
         switch (gridType)
         {
@@ -46,6 +45,11 @@ public class Grid : MonoBehaviour
     public void BindClick(UnityAction clickFunc)
     {
         btn.onClick.AddListener(clickFunc);
+    }
+
+    public void SetVisited()
+    {
+        image.color = Color.yellow;
     }
     
 }

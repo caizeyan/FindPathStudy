@@ -82,6 +82,33 @@ public class BFS : MonoBehaviour
         }
     }
 
+    private int[,] dir = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+    private void PathFind()
+    {
+        Queue<Vector2Int> queue = new Queue<Vector2Int>(); 
+        bool[, ] visited = new bool[height,width];
+        queue.Enqueue(startPos);
+        visited[startPos.y, startPos.x] = true;
+        while (queue.Count != 0)
+        {
+            Vector2Int pos = queue.Dequeue();
+            for (int i = 0; i < 4; i++)
+            {
+                int x = pos.x + dir[i,0];
+                int y = pos.y + dir[i,1];
+                if (x>=0 && x<width && y>=0 && y<height)
+                { 
+                    if (map[y,x].type != GridType.Block && !visited[y,x]) {
+                            map[y,x].SetVisited();
+                            queue.Enqueue(new Vector2Int(x,y));
+                            visited[y, x] = true; 
+                    }
+                }
+                
+            }
+        }
+    }
+
     
 
     private void OnGUI()
@@ -89,6 +116,11 @@ public class BFS : MonoBehaviour
         if (GUILayout.Button("重置地图"))
         {
             CreateMap();
+        }
+
+        if (GUILayout.Button("BFS"))
+        {
+            PathFind();   
         }
     }
 }

@@ -519,7 +519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 6457036299017145807, guid: 206b6557f19b588468c068f48644d8b3, type: 3}
-  width: 5
-  height: 5
+  width: 8
+  height: 8
   startPos: {x: 1, y: 1}
   endPos: {x: 3, y: 3}
